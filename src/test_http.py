@@ -10,7 +10,7 @@ async def bound_fetch(sem, url, session):
 
 
 async def main(loop, url):
-    count = 100000
+    count = 10000
     tasks = []
     sem = asyncio.Semaphore(count)
     async with aiohttp.ClientSession() as session:

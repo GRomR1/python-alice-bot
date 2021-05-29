@@ -65,7 +65,7 @@ async def handle_start_attack(alice_request):
 
 
 @dp.request_handler(state=DosStates.START_ATTACK,
-                    commands=['стоп', 'хватит', 'прекрати',
+                    contains=['стоп', 'хватит', 'прекрати',
                               'остановись', 'нельзя', 'фу',
                               'отмена'])
 async def handle_stop_attack(alice_request):
@@ -97,15 +97,17 @@ async def handle_start_ping(alice_request):
     user_id = alice_request.session.user_id
     request_text = alice_request.request.original_utterance
     addr = request_text
+    if 'яндекс' in request_text:
+        addr = 'yandex.ru'
     if 'мой сервер' in request_text:
         addr = SKOLTECH_URL
     result = utils.ping(addr)
     await dp.storage.set_state(user_id, UserStates.SELECT_COMMAND)
     if result == 0:
-        return alice_request.response('Пакетики доставлены. Что дальше ?',
+        return alice_request.response('Сервер жив и отвечает. Что еще?',
                                       buttons=meta.action_buttons)
     else:
-        return alice_request.response('Пакетики не доставлены. Что дальше ?',
+        return alice_request.response('Пакетики не доставлены. Что дальше?',
                                       buttons=meta.action_buttons)
 
 
